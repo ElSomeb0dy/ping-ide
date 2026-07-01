@@ -1,0 +1,10 @@
+node_modules/
+dist/
+target/
+.env
+.DS_Store
+
+apps/web/node_modules/
+apps/web/dist/
+apps/web/.env
+apps/api/target/

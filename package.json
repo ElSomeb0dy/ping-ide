@@ -1,0 +1,14 @@
+{
+  "name": "ping",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:api\"",
+    "dev:web": "npm --prefix apps/web run dev",
+    "dev:api": "docker compose up api db",
+    "build:web": "npm --prefix apps/web run build",
+    "test": "npm --prefix apps/web run lint && mvn -f apps/api/pom.xml test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
