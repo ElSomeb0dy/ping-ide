@@ -10,8 +10,10 @@ import fr.epita.assistants.ping.data.repository.SubmissionRepository;
 import fr.epita.assistants.ping.data.repository.TestCaseRepository;
 import fr.epita.assistants.ping.data.repository.UserExerciseProgressRepository;
 import fr.epita.assistants.ping.domain.service.CodeExecutionService;
+import fr.epita.assistants.ping.domain.service.AchievementService;
 import fr.epita.assistants.ping.domain.service.GamificationService;
 import fr.epita.assistants.ping.domain.service.ProgressService;
+import fr.epita.assistants.ping.presentation.api.response.AchievementResponse;
 import fr.epita.assistants.ping.presentation.api.request.SubmitExerciseRequest;
 import fr.epita.assistants.ping.presentation.api.response.SubmitExerciseResponse;
 import fr.epita.assistants.ping.utils.HttpError;
@@ -49,6 +51,8 @@ public class ExerciseResource {
   ExerciseConverter exerciseConverter;
   @Inject
   CodeExecutionService codeExecutionService;
+  @Inject
+  AchievementService achievementService;
   @Inject
   ProgressService progressService;
   @Inject
@@ -123,11 +127,13 @@ public class ExerciseResource {
     submissionRepository.persist(submission);
 
     GamificationService.AwardResult awardResult = new GamificationService.AwardResult(0, false, null);
+    List<AchievementResponse> newAchievements = List.of();
     if (passed) {
       if (xpAwarded > 0) {
         awardResult = gamificationService.awardXp(userId, xpAwarded);
       }
       progressService.markExerciseCompleted(userId, exercise, submission.getId(), xpAwarded);
+      newAchievements = achievementService.checkAndUnlock(userId);
     }
 
     return Response.ok(new SubmitExerciseResponse(
@@ -136,7 +142,7 @@ public class ExerciseResource {
         xpAwarded,
         awardResult.leveledUp(),
         awardResult.newLevel(),
-        List.of(),
+        newAchievements,
         List.of())).build();
   }
 

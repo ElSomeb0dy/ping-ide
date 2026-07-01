@@ -55,6 +55,7 @@ export default function ExerciseIDE() {
         ...lines,
         result.xpAwarded > 0 ? `+${result.xpAwarded} XP` : "Aucun XP ajouté",
         result.leveledUp ? `Nouveau niveau: ${result.newLevel}` : "",
+        ...result.newAchievements.map((achievement) => `Succès débloqué: ${achievement.title}`),
       ].filter(Boolean).join("\n"));
 
       await Promise.all([
