@@ -392,6 +392,70 @@ public class DevBootstrapService {
             "5",
             "print(5)\n");
 
+    LessonModel advanced = ensureLesson(
+            "advanced-challenges",
+            "Défis avancés",
+            "Des problèmes plus corsés pour tester ta maîtrise des structures et de l'algorithmique.",
+            7,
+            "Difficile",
+            "Défis",
+            sorting.getId());
+    ensureExercise(
+            advanced.getId(),
+            "longest-substring",
+            "Plus longue sous-chaîne sans répétition",
+            "Trouve la longueur de la plus longue sous-chaîne sans caractère répété. La solution de test est déjà écrite.",
+            1,
+            "Difficile",
+            55,
+            "s = \"abcabcbb\"",
+            "3",
+            "print(3)\n");
+    ensureExercise(
+            advanced.getId(),
+            "matrix-rotate",
+            "Rotation de matrice",
+            "Fais pivoter une matrice carrée de 90 degrés sur elle-même, en place. La solution de test est déjà écrite.",
+            2,
+            "Difficile",
+            55,
+            "matrix = [[1,2],[3,4]]",
+            "[[3, 1], [4, 2]]",
+            "print([[3, 1], [4, 2]])\n");
+    ensureExercise(
+            advanced.getId(),
+            "coin-change",
+            "Rendu de monnaie",
+            "Trouve le nombre minimal de pièces pour atteindre un montant donné (programmation dynamique). La solution de test est déjà écrite.",
+            3,
+            "Difficile",
+            60,
+            "coins = [1, 3, 4], amount = 6",
+            "2",
+            "print(2)\n");
+    ensureExercise(
+            advanced.getId(),
+            "valid-parentheses",
+            "Parenthèses valides",
+            "Vérifie si une chaîne de parenthèses/crochets/accolades est correctement équilibrée, avec une pile. La solution de test est déjà écrite.",
+            4,
+            "Difficile",
+            50,
+            "s = \"{[()()]}\"",
+            "True",
+            "print(True)\n");
+    ensureExercise(
+            advanced.getId(),
+            "longest-increasing-subsequence",
+            "Plus longue sous-suite croissante",
+            "Trouve la longueur de la plus longue sous-suite strictement croissante d'une liste. La solution de test est déjà écrite.",
+            5,
+            "Difficile",
+            65,
+            "nums = [10, 9, 2, 5, 3, 7, 101, 18]",
+            "4",
+            "print(4)\n");
+
     ensureAchievement("FIRST_EXERCISE", "Premier pas", "Termine ton tout premier exercice.", "/achievements/first-exercise.svg", "EXERCISES_COMPLETED", 1, 30);
     ensureAchievement("FIVE_EXERCISES", "Marathonien junior", "Termine 5 exercices au total.", "/achievements/five-exercises.svg", "EXERCISES_COMPLETED", 5, 50);
     ensureAchievement("TEN_EXERCISES", "Habitué", "Termine 10 exercices au total.", "/achievements/ten-exercises.svg", "EXERCISES_COMPLETED", 10, 60);
@@ -402,7 +466,7 @@ public class DevBootstrapService {
     ensureAchievement("LEVEL_5", "Niveau 5", "Atteins le niveau 5.", "/achievements/level-5.svg", "LEVEL", 5, 75);
     ensureAchievement("LEVEL_10", "Niveau 10", "Atteins le niveau 10.", "/achievements/level-10.svg", "LEVEL", 10, 120);
     ensureAchievement("LEVEL_20", "Niveau 20", "Atteins le niveau 20.", "/achievements/level-20.svg", "LEVEL", 20, 200);
-
+    ensureAchievement("LEVEL_25", "Niveau 25", "Atteins le niveau 25.", "/achievements/level-25.svg", "LEVEL", 25, 250);
     ensureQuest("DAILY_LOGIN", "Connexion du jour", "Connecte-toi aujourd'hui.", 10, "LOGIN", 1);
     ensureQuest("SOLVE_ONE", "Résous 1 exercice", "Termine un exercice aujourd'hui.", 30, "EXERCISES_COMPLETED", 1);
     ensureQuest("EARN_XP", "Gagne 50 XP", "Accumule 50 XP aujourd'hui.", 50, "XP_EARNED", 50);
