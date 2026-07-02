@@ -13,7 +13,9 @@ import fr.epita.assistants.ping.domain.service.CodeExecutionService;
 import fr.epita.assistants.ping.domain.service.AchievementService;
 import fr.epita.assistants.ping.domain.service.GamificationService;
 import fr.epita.assistants.ping.domain.service.ProgressService;
+import fr.epita.assistants.ping.domain.service.QuestService;
 import fr.epita.assistants.ping.presentation.api.response.AchievementResponse;
+import fr.epita.assistants.ping.presentation.api.response.QuestResponse;
 import fr.epita.assistants.ping.presentation.api.request.SubmitExerciseRequest;
 import fr.epita.assistants.ping.presentation.api.response.SubmitExerciseResponse;
 import fr.epita.assistants.ping.utils.HttpError;
@@ -57,6 +59,8 @@ public class ExerciseResource {
   ProgressService progressService;
   @Inject
   GamificationService gamificationService;
+  @Inject
+  QuestService questService;
   @Inject
   JsonWebToken jwt;
 
@@ -128,11 +132,17 @@ public class ExerciseResource {
 
     GamificationService.AwardResult awardResult = new GamificationService.AwardResult(0, false, null);
     List<AchievementResponse> newAchievements = List.of();
+    List<QuestResponse> questUpdates = List.of();
     if (passed) {
       if (xpAwarded > 0) {
         awardResult = gamificationService.awardXp(userId, xpAwarded);
+        questUpdates = questService.recordProgress(userId, "XP_EARNED", xpAwarded);
       }
       progressService.markExerciseCompleted(userId, exercise, submission.getId(), xpAwarded);
+      List<QuestResponse> exerciseQuestUpdates = questService.recordProgress(userId, "EXERCISES_COMPLETED", 1);
+      if (!exerciseQuestUpdates.isEmpty()) {
+        questUpdates = mergeQuestUpdates(questUpdates, exerciseQuestUpdates);
+      }
       newAchievements = achievementService.checkAndUnlock(userId);
     }
 
@@ -143,7 +153,13 @@ public class ExerciseResource {
         awardResult.leveledUp(),
         awardResult.newLevel(),
         newAchievements,
-        List.of())).build();
+        questUpdates)).build();
+  }
+
+  private List<QuestResponse> mergeQuestUpdates(List<QuestResponse> first, List<QuestResponse> second) {
+    List<QuestResponse> merged = new ArrayList<>(first);
+    merged.addAll(second);
+    return merged;
   }
 
   private String resultsToJson(List<SubmitExerciseResponse.TestResultResponse> results) {

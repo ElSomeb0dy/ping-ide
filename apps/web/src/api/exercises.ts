@@ -1,5 +1,6 @@
 import { apiFetch } from "./client";
 import type { AchievementResponse } from "./achievements";
+import type { QuestResponse } from "./quests";
 import type { ExerciseResponse } from "./lessons";
 
 export interface ExecuteResponse {
@@ -21,7 +22,7 @@ export interface SubmitExerciseResponse {
   leveledUp: boolean;
   newLevel: number;
   newAchievements: AchievementResponse[];
-  questUpdates: unknown[];
+  questUpdates: QuestResponse[];
 }
 
 export function getExercise(id: string) {

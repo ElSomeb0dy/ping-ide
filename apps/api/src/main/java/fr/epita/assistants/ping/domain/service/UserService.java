@@ -28,6 +28,8 @@ public class UserService {
   UserSettingsService userSettingsService;
   @Inject
   GamificationService gamificationService;
+  @Inject
+  QuestService questService;
 
   public record RegisterResult(String token, UserModel user) {
   }
@@ -100,6 +102,7 @@ public class UserService {
     }
 
     gamificationService.touchActivity(userModel.getId());
+    questService.recordProgress(userModel.getId(), "LOGIN", 1);
 
     return userModel;
   }
@@ -139,6 +142,7 @@ public class UserService {
     userRepository.createUser(userModel);
     userSettingsService.ensureDefaults(userModel.getId());
     gamificationService.touchActivity(userModel.getId());
+    questService.recordProgress(userModel.getId(), "LOGIN", 1);
 
     return new RegisterResult(generateToken(userModel), userModel);
   }

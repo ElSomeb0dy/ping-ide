@@ -24,12 +24,20 @@
 @layer base {
   html {
     color-scheme: dark;
+    height: 100%;
+    overflow: hidden;
   }
   body {
     background: var(--color-bg);
     color: var(--color-text);
     font-family: var(--font-display);
     -webkit-font-smoothing: antialiased;
+    height: 100%;
+    overflow: hidden;
+  }
+  #root {
+    height: 100%;
+    overflow: hidden;
   }
   ::selection {
     background: var(--color-green);

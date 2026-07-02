@@ -529,7 +529,13 @@ public class DevBootstrapService {
   }
 
   private void ensureQuest(String code, String title, String description, Integer xpReward, String type, Integer criteria) {
-    if (questRepository.findByCode(code) != null) {
+    QuestModel existing = questRepository.findByCode(code);
+    if (existing != null) {
+      existing.setTitle(title);
+      existing.setDescription(description);
+      existing.setXpReward(xpReward);
+      existing.setType(type);
+      existing.setCriteria(criteria);
       return;
     }
 
