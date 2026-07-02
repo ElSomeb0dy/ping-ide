@@ -109,6 +109,32 @@ paths:
           description: The login or the password is null
       servers:
       - url: http://localhost:8080
+  /api/user/register:
+    post:
+      summary: Register a public user
+      description: |
+        Create a regular user account and immediately return an authentication token.
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        "200":
+          description: The token and user info of the newly registered user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        "400":
+          description: The registration payload is invalid
+        "409":
+          description: The username or email is already taken
+      servers:
+      - url: http://localhost:8080
   /api/user/refresh:
     get:
       summary: Refresh a token
@@ -554,6 +580,19 @@ components:
       type: object
       properties:
         token:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserResponse'
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        confirmPassword:
           type: string
     NewUserRequest:
       type: object

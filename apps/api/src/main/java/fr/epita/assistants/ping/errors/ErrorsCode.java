@@ -19,6 +19,7 @@ public enum ErrorsCode implements IHttpError {
     INVALID_LANGUAGE(BAD_REQUEST, "Invalid language"),
     QUEST_NOT_FOUND(NOT_FOUND, "Quest not found"),
     ACHIEVEMENT_NOT_FOUND(NOT_FOUND, "Achievement not found"),
+    USER_ALREADY_EXISTS(CONFLICT, "Username or email is already in use"),
     ;
 
     private final HttpError error;

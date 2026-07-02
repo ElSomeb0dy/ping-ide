@@ -28,6 +28,9 @@ public class UserModel {
   @Column(name = "login", unique = true, nullable = false)
   private String login;
 
+  @Column(name = "email", unique = true)
+  private String email;
+
   @Column(name = "password", nullable = false)
   private String password;
 

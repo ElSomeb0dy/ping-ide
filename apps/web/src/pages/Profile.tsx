@@ -2,6 +2,7 @@ import { Flame, Trophy, Star, GraduationCap } from "lucide-react";
 import { Card } from "../components/ui";
 import XpRing from "../components/XpRing";
 import { useAuth } from "../context/AuthContext";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useSettings } from "../hooks/useSettings";
 import { useUserStats } from "../hooks/useUserStats";
 
@@ -9,11 +10,12 @@ export default function Profile() {
   const auth = useAuth();
   const statsQuery = useUserStats();
   const settingsQuery = useSettings();
+  const currentUser = useCurrentUser();
 
-  if (statsQuery.isLoading) return <Card>Chargement du profil...</Card>;
+  if (statsQuery.isLoading || currentUser.isLoading) return <Card>Chargement du profil...</Card>;
 
   const userStats = statsQuery.data;
-  const displayName = auth.user?.id.slice(0, 8) ?? "Apprenant";
+  const displayName = currentUser.data?.displayName || currentUser.data?.login || "Apprenant";
   const stats = [
     { label: "Leçons terminées", value: userStats?.lessonsCompleted ?? 0, icon: GraduationCap },
     { label: "Exercices résolus", value: userStats?.exercisesSolved ?? 0, icon: Star },
@@ -60,7 +62,7 @@ export default function Profile() {
         <h2 className="font-display text-xl font-bold">Informations</h2>
         <div className="mt-4 flex flex-col divide-y divide-(--color-border)">
           {[
-            { label: "Identifiant", value: auth.user?.id ?? "-" },
+            { label: "Identifiant", value: currentUser.data?.login ?? "-" },
             { label: "Rôle", value: auth.isAdmin ? "Admin" : "Apprenant" },
             { label: "Langage préféré", value: settingsQuery.data?.defaultLanguage ?? "Python" },
           ].map((row) => (

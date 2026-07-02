@@ -10,6 +10,7 @@ import {
   Shield,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -22,7 +23,8 @@ const navItems = [
 export default function Sidebar() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const displayName = auth.user?.id.slice(0, 8) ?? "Ping";
+  const currentUser = useCurrentUser();
+  const displayName = currentUser.data?.displayName || currentUser.data?.login || "Ping";
   const items = auth.isAdmin
     ? [...navItems, { to: "/admin", label: "Admin", icon: Shield, end: false }]
     : navItems;

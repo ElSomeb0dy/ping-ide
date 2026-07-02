@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Zap } from "lucide-react";
 import { Button, Card } from "../components/ui";
 import { useAuth } from "../context/AuthContext";
@@ -81,6 +81,13 @@ export default function Login() {
             {submitting ? "Connexion..." : "Se connecter"}
           </Button>
         </form>
+
+        <p className="mt-6 text-sm text-(--color-text-soft)">
+          Pas encore de compte ?{" "}
+          <Link to="/register" className="font-medium text-(--color-green) hover:underline">
+            Créer un compte
+          </Link>
+        </p>
       </Card>
     </main>
   );

@@ -2,24 +2,24 @@ import { Link } from "react-router-dom";
 import { Flame, Check } from "lucide-react";
 import { Card, ProgressBar, Button, XpBadge } from "../components/ui";
 import XpRing from "../components/XpRing";
-import { useAuth } from "../context/AuthContext";
 import { useAchievements } from "../hooks/useAchievements";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useLessons } from "../hooks/useLessons";
 import { useQuestsDaily } from "../hooks/useQuestsDaily";
 import { useUserStats } from "../hooks/useUserStats";
 
 export default function Dashboard() {
-  const auth = useAuth();
   const stats = useUserStats();
   const lessons = useLessons();
   const quests = useQuestsDaily();
   const achievements = useAchievements();
+  const currentUser = useCurrentUser();
 
-  if (stats.isLoading || lessons.isLoading || quests.isLoading || achievements.isLoading) {
+  if (stats.isLoading || lessons.isLoading || quests.isLoading || achievements.isLoading || currentUser.isLoading) {
     return <Card>Chargement...</Card>;
   }
 
-  const displayName = auth.user?.id.slice(0, 8) ?? "Apprenant";
+  const displayName = currentUser.data?.displayName || currentUser.data?.login || "Apprenant";
   const userStats = stats.data;
   const continueLesson = lessons.data?.find((l) => l.status === "IN_PROGRESS") ?? lessons.data?.find((l) => l.status !== "LOCKED");
   const recentAchievements = achievements.data?.filter((a) => a.unlocked).slice(0, 2) ?? [];

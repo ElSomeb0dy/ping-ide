@@ -106,14 +106,16 @@ function ToggleRow({
         <p className="text-xs text-(--color-text-mute)">{description}</p>
       </div>
       <button
+        type="button"
+        aria-pressed={value}
         onClick={() => onChange(!value)}
         className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
           value ? "bg-(--color-green)" : "bg-(--color-surface-elevated)"
         }`}
       >
         <span
-          className={`absolute top-0.5 size-5 rounded-full bg-(--color-bg) transition-transform ${
-            value ? "translate-x-5" : "translate-x-0.5"
+          className={`absolute left-0.5 top-0.5 size-5 rounded-full bg-(--color-bg) transition-transform ${
+            value ? "translate-x-5" : "translate-x-0"
           }`}
         />
       </button>

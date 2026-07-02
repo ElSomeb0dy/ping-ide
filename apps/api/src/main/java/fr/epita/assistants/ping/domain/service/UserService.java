@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import fr.epita.assistants.ping.data.model.UserModel;
 import fr.epita.assistants.ping.data.repository.UserRepository;
+import fr.epita.assistants.ping.errors.ErrorsCode;
+import fr.epita.assistants.ping.presentation.api.request.RegisterRequest;
 import fr.epita.assistants.ping.utils.HashUtils;
 import fr.epita.assistants.ping.utils.HttpError;
 
@@ -26,6 +28,9 @@ public class UserService {
   UserSettingsService userSettingsService;
   @Inject
   GamificationService gamificationService;
+
+  public record RegisterResult(String token, UserModel user) {
+  }
 
   public List<UserModel> fetchAllUsers() {
     return userRepository.fetchAll();
@@ -97,6 +102,45 @@ public class UserService {
     gamificationService.touchActivity(userModel.getId());
 
     return userModel;
+  }
+
+  @Transactional
+  public RegisterResult register(RegisterRequest request) {
+    if (request == null) {
+      throw new HttpError(Status.BAD_REQUEST, "The request cannot be empty").get();
+    }
+
+    if (request.username == null || request.username.isBlank()
+        || request.email == null || request.email.isBlank()
+        || request.password == null || request.password.isBlank()) {
+      throw new HttpError(Status.BAD_REQUEST, "The username, email and password are required").get();
+    }
+
+    if (!isLoginValid(request.username)) {
+      throw new HttpError(Status.BAD_REQUEST, "The username is invalid").get();
+    }
+
+    if (doesUserExists(request.username) || userRepository.findByEmail(request.email) != null) {
+      ErrorsCode.USER_ALREADY_EXISTS.throwException();
+    }
+
+    UserModel userModel = new UserModel();
+    userModel.setLogin(request.username);
+    userModel.setEmail(request.email);
+    userModel.setPassword(encryptPassword(request.password));
+    userModel.setDisplayName(computeDisplayName(request.username));
+    userModel.setIsAdmin(false);
+    userModel.setAvatar("");
+    userModel.setXp(0);
+    userModel.setLevel(1);
+    userModel.setCurrentStreak(0);
+    userModel.setLongestStreak(0);
+
+    userRepository.createUser(userModel);
+    userSettingsService.ensureDefaults(userModel.getId());
+    gamificationService.touchActivity(userModel.getId());
+
+    return new RegisterResult(generateToken(userModel), userModel);
   }
 
   public String generateToken(UserModel userModel) {

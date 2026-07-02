@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, type ReactNode } from "react";
 import { login as loginRequest } from "../api/auth";
 import { clearAuthToken, getAuthToken, saveAuthToken, setUnauthorizedHandler } from "../api/client";
 
@@ -25,6 +25,7 @@ interface AuthContextValue extends AuthState {
   isAuthenticated: boolean;
   isAdmin: boolean;
   login: (loginValue: string, password: string) => Promise<void>;
+  loginWithToken: (token: string) => void;
   logout: () => void;
 }
 
@@ -79,6 +80,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "logout" });
   };
 
+  const loginWithToken = useCallback((token: string) => {
+    const user = userFromToken(token);
+    if (!user) {
+      throw new Error("Invalid token received from the API");
+    }
+    saveAuthToken(token);
+    dispatch({ type: "login", token, user });
+  }, []);
+
   useEffect(() => {
     setUnauthorizedHandler(logout);
     return () => setUnauthorizedHandler(null);
@@ -90,15 +100,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAdmin: Boolean(state.user?.roles.includes("admin")),
     login: async (loginValue: string, password: string) => {
       const response = await loginRequest(loginValue, password);
-      const user = userFromToken(response.token);
-      if (!user) {
-        throw new Error("Invalid token received from the API");
-      }
-      saveAuthToken(response.token);
-      dispatch({ type: "login", token: response.token, user });
+      loginWithToken(response.token);
     },
+    loginWithToken,
     logout,
-  }), [state]);
+  }), [loginWithToken, state]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

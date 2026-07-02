@@ -18,6 +18,7 @@ import fr.epita.assistants.ping.domain.service.UserSettingsService;
 import fr.epita.assistants.ping.domain.service.UserService;
 import fr.epita.assistants.ping.presentation.api.request.LoginRequest;
 import fr.epita.assistants.ping.presentation.api.request.NewUserRequest;
+import fr.epita.assistants.ping.presentation.api.request.RegisterRequest;
 import fr.epita.assistants.ping.presentation.api.response.UserResponse;
 
 import java.util.List;
@@ -125,7 +126,25 @@ public class UserResource {
     Logger.log(
         "POST /api/user/login successful with id=" + authenticatedUser.getId() + ", login=" + request.login + ", authenticatedUserID=" + jwt.getSubject());
 
-    return Response.ok(new LoginResponse(token)).build();
+    return Response.ok(new LoginResponse(token, userConverter.toUserResponse(authenticatedUser))).build();
+  }
+
+  @POST
+  @Path("/user/register")
+  public Response register(RegisterRequest request) {
+    UserService.RegisterResult result;
+    try {
+      result = userService.register(request);
+    } catch (Exception e) {
+      Logger.error("POST /api/user/register failed: username=" + (request == null ? null : request.username)
+          + ", reason=" + e.getMessage());
+      throw e;
+    }
+
+    Logger.log("POST /api/user/register successful: id=" + result.user().getId()
+        + ", login=" + result.user().getLogin());
+
+    return Response.ok(new LoginResponse(result.token(), userConverter.toUserResponse(result.user()))).build();
   }
 
   @GET
@@ -146,7 +165,7 @@ public class UserResource {
     Logger.log("GET /api/user/login successful with authenticatedUserID=" + jwt.getSubject() + ", login=" + userModel.getLogin()
         + ", isAdmin=" + jwt.getGroups());
 
-    return Response.ok(new LoginResponse(token)).build();
+    return Response.ok(new LoginResponse(token, userConverter.toUserResponse(userModel))).build();
   }
 
   @GET
