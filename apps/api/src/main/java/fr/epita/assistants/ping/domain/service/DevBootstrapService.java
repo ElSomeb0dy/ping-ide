@@ -54,6 +54,7 @@ public class DevBootstrapService {
   @Transactional
   void onStart(@Observes StartupEvent event) {
     seedContent();
+    prewarmExecutionImage();
 
     if (!Boolean.TRUE.equals(bootstrapAdminEnabled)) {
       return;
@@ -66,6 +67,21 @@ public class DevBootstrapService {
 
     userService.createUser(bootstrapAdminLogin, bootstrapAdminPassword, true);
     Logger.log("Bootstrap admin created: login=" + bootstrapAdminLogin);
+  }
+
+  private void prewarmExecutionImage() {
+    new Thread(() -> {
+      try {
+        Logger.log("Pulling python:3.12-slim execution image...");
+        new ProcessBuilder("docker", "pull", "python:3.12-slim")
+                .inheritIO()
+                .start()
+                .waitFor();
+        Logger.log("Execution image ready.");
+      } catch (Exception e) {
+        Logger.error("Failed to prewarm execution image: " + e.getMessage());
+      }
+    }, "image-prewarm").start();
   }
 
   private void seedContent() {
