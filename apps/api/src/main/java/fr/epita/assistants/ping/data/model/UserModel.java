@@ -40,7 +40,7 @@ public class UserModel {
   @Column(name = "display_name")
   private String displayName;
 
-  @Column(name = "avatar")
+  @Column(name = "avatar", columnDefinition = "TEXT")
   private String avatar;
 
   @Column(name = "xp", nullable = false)

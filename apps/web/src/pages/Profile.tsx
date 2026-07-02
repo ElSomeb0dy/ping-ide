@@ -15,6 +15,7 @@ export default function Profile() {
   const updateUser = useUpdateUser();
   const [editingAvatar, setEditingAvatar] = useState(false);
   const [avatarInput, setAvatarInput] = useState("");
+  const [dragging, setDragging] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
 
@@ -32,6 +33,13 @@ export default function Profile() {
   const saveAvatar = async () => {
     await updateUser.mutateAsync({ avatar: avatarInput });
     setEditingAvatar(false);
+  };
+
+  const readFile = (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = () => setAvatarInput(reader.result as string);
+    reader.readAsDataURL(file);
   };
 
   const startEditingName = () => {
@@ -119,10 +127,45 @@ export default function Profile() {
             <Card>
               <h2 className="font-display text-lg font-bold">Modifier l'avatar</h2>
               <div className="mt-4 flex flex-col gap-3">
-                <label className="text-sm text-(--color-text-soft)">URL de l'image</label>
+                <div
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setDragging(true);
+                    }}
+                    onDragLeave={() => setDragging(false)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setDragging(false);
+                      const file = e.dataTransfer.files[0];
+                      if (file) readFile(file);
+                    }}
+                    className={`flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center text-sm transition-colors ${
+                        dragging
+                            ? "border-(--color-green) bg-(--color-green-soft) text-(--color-green)"
+                            : "border-(--color-border-hover) text-(--color-text-soft)"
+                    }`}
+                >
+                  {avatarInput ? (
+                      <img src={avatarInput} alt="Aperçu" className="size-16 rounded-full object-cover" />
+                  ) : null}
+                  <p>Glisse-dépose une image ici</p>
+                  <label className="cursor-pointer text-(--color-green) underline">
+                    ou choisis un fichier
+                    <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) readFile(file);
+                        }}
+                    />
+                  </label>
+                </div>
+                <label className="text-sm text-(--color-text-soft)">Ou une URL d'image</label>
                 <input
                     type="text"
-                    value={avatarInput}
+                    value={avatarInput.startsWith("data:") ? "" : avatarInput}
                     onChange={(e) => setAvatarInput(e.target.value)}
                     placeholder="https://..."
                     className="w-full rounded-lg border border-(--color-border-hover) bg-(--color-surface-elevated) px-3.5 py-2.5 text-sm outline-none"
