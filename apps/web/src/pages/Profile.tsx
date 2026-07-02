@@ -1,21 +1,36 @@
-import { Flame, Trophy, Star, GraduationCap } from "lucide-react";
-import { Card } from "../components/ui";
+import { useState } from "react";
+import { Flame, Trophy, Star, GraduationCap, Pencil } from "lucide-react";
+import { Card, Button } from "../components/ui";
 import XpRing from "../components/XpRing";
 import { useAuth } from "../context/AuthContext";
-import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useSettings } from "../hooks/useSettings";
 import { useUserStats } from "../hooks/useUserStats";
+import { useUser, useUpdateUser } from "../hooks/useUser";
 
 export default function Profile() {
   const auth = useAuth();
   const statsQuery = useUserStats();
   const settingsQuery = useSettings();
-  const currentUser = useCurrentUser();
+  const userQuery = useUser();
+  const updateUser = useUpdateUser();
+  const [editingAvatar, setEditingAvatar] = useState(false);
+  const [avatarInput, setAvatarInput] = useState("");
 
-  if (statsQuery.isLoading || currentUser.isLoading) return <Card>Chargement du profil...</Card>;
+  if (statsQuery.isLoading) return <Card>Chargement du profil...</Card>;
 
   const userStats = statsQuery.data;
-  const displayName = currentUser.data?.displayName || currentUser.data?.login || "Apprenant";
+  const displayName = userQuery.data?.displayName ?? "Apprenant";
+  const avatar = userQuery.data?.avatar;
+
+  const startEditingAvatar = () => {
+    setAvatarInput(avatar ?? "");
+    setEditingAvatar(true);
+  };
+
+  const saveAvatar = async () => {
+    await updateUser.mutateAsync({ avatar: avatarInput });
+    setEditingAvatar(false);
+  };
   const stats = [
     { label: "Leçons terminées", value: userStats?.lessonsCompleted ?? 0, icon: GraduationCap },
     { label: "Exercices résolus", value: userStats?.exercisesSolved ?? 0, icon: Star },
@@ -29,8 +44,21 @@ export default function Profile() {
 
       <Card className="flex flex-wrap items-center justify-between gap-6">
         <div className="flex items-center gap-5">
-          <div className="grid size-16 place-items-center rounded-full border border-(--color-border-hover) bg-(--color-surface-elevated) text-2xl font-semibold">
-            {displayName.slice(0, 1).toUpperCase()}
+          <div className="group relative">
+            <div className="grid size-16 place-items-center overflow-hidden rounded-full border border-(--color-border-hover) bg-(--color-surface-elevated) text-2xl font-semibold">
+              {avatar ? (
+                <img src={avatar} alt={displayName} className="size-full object-cover" />
+              ) : (
+                displayName.slice(0, 1).toUpperCase()
+              )}
+            </div>
+            <button
+              onClick={startEditingAvatar}
+              className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full border border-(--color-border-hover) bg-(--color-surface-elevated) text-(--color-text-soft) hover:text-(--color-green)"
+              title="Modifier l'avatar"
+            >
+              <Pencil className="size-3.5" />
+            </button>
           </div>
           <div>
             <p className="font-display text-2xl font-bold">{displayName}</p>
@@ -48,6 +76,30 @@ export default function Profile() {
         </div>
       </Card>
 
+      {editingAvatar && (
+        <Card>
+          <h2 className="font-display text-lg font-bold">Modifier l'avatar</h2>
+          <div className="mt-4 flex flex-col gap-3">
+            <label className="text-sm text-(--color-text-soft)">URL de l'image</label>
+            <input
+              type="text"
+              value={avatarInput}
+              onChange={(e) => setAvatarInput(e.target.value)}
+              placeholder="https://..."
+              className="w-full rounded-lg border border-(--color-border-hover) bg-(--color-surface-elevated) px-3.5 py-2.5 text-sm outline-none"
+            />
+            <div className="flex items-center gap-3">
+              <Button variant="solid" onClick={saveAvatar} disabled={updateUser.isPending}>
+                {updateUser.isPending ? "Enregistrement..." : "Enregistrer"}
+              </Button>
+              <Button variant="ghost" onClick={() => setEditingAvatar(false)}>
+                Annuler
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {stats.map(({ label, value, icon: Icon }) => (
           <Card key={label} className="text-center">
@@ -62,7 +114,7 @@ export default function Profile() {
         <h2 className="font-display text-xl font-bold">Informations</h2>
         <div className="mt-4 flex flex-col divide-y divide-(--color-border)">
           {[
-            { label: "Identifiant", value: currentUser.data?.login ?? "-" },
+            { label: "Identifiant", value: auth.user?.id ?? "-" },
             { label: "Rôle", value: auth.isAdmin ? "Admin" : "Apprenant" },
             { label: "Langage préféré", value: settingsQuery.data?.defaultLanguage ?? "Python" },
           ].map((row) => (

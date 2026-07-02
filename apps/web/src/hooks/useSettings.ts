@@ -16,10 +16,25 @@ export function useUpdateSettings() {
   const auth = useAuth();
   const queryClient = useQueryClient();
 
+  const queryKey = ["settings", auth.user?.id];
+
   return useMutation({
     mutationFn: (settings: Partial<UserSettingsResponse>) => updateUserSettings(auth.user!.id, settings),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["settings", auth.user?.id] });
+    onMutate: async (settings) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<UserSettingsResponse>(queryKey);
+      if (previous) {
+        queryClient.setQueryData(queryKey, { ...previous, ...settings });
+      }
+      return { previous };
+    },
+    onError: (_err, _settings, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKey, context.previous);
+      }
+    },
+    onSuccess: (updated) => {
+      queryClient.setQueryData(queryKey, updated);
     },
   });
 }

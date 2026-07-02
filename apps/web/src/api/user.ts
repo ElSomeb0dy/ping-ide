@@ -44,3 +44,16 @@ export function updateUserSettings(id: string, settings: Partial<UserSettingsRes
     body: JSON.stringify(settings),
   });
 }
+
+export interface UpdateUserPayload {
+  password?: string;
+  displayName?: string;
+  avatar?: string;
+}
+
+export function updateUser(id: string, payload: UpdateUserPayload) {
+  return apiFetch<UserResponse>(`/api/user/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
