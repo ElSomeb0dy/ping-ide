@@ -70,97 +70,311 @@ public class DevBootstrapService {
 
   private void seedContent() {
     LessonModel arrays = ensureLesson(
-        "arrays-basics",
-        "Les bases des tableaux",
-        "Découvre comment manipuler des tableaux et parcourir leurs éléments efficacement.",
-        1,
-        "Facile",
-        "Tableaux",
-        null);
+            "arrays-basics",
+            "Les bases des tableaux",
+            "Découvre comment manipuler des tableaux et parcourir leurs éléments efficacement.",
+            1,
+            "Facile",
+            "Tableaux",
+            null);
     ensureExercise(
-        arrays.getId(),
-        "two-sum",
-        "Two Sum",
-        "Retourne les indices de deux nombres dont la somme vaut la cible. Pour tester le backend, la solution est déjà écrite.",
-        1,
-        "Facile",
-        30,
-        "nums = [2, 7, 11, 15], target = 9",
-        "[0, 1]",
-        "print(\"[0, 1]\")\n");
+            arrays.getId(),
+            "two-sum",
+            "Two Sum",
+            "Retourne les indices de deux nombres dont la somme vaut la cible. Pour tester le backend, la solution est déjà écrite.",
+            1,
+            "Facile",
+            30,
+            "nums = [2, 7, 11, 15], target = 9",
+            "[0, 1]",
+            "print(\"[0, 1]\")\n");
     ensureExercise(
-        arrays.getId(),
-        "max-value",
-        "Maximum d'un tableau",
-        "Parcours un tableau pour trouver sa plus grande valeur. La réponse est préremplie pour valider le flux.",
-        2,
-        "Facile",
-        25,
-        "nums = [4, 2, 15, 8]",
-        "15",
-        "print(15)\n");
+            arrays.getId(),
+            "max-value",
+            "Maximum d'un tableau",
+            "Parcours un tableau pour trouver sa plus grande valeur. La réponse est préremplie pour valider le flux.",
+            2,
+            "Facile",
+            25,
+            "nums = [4, 2, 15, 8]",
+            "15",
+            "print(15)\n");
     ensureExercise(
-        arrays.getId(),
-        "reverse-array",
-        "Inverser un tableau",
-        "Construis une version inversée d'un tableau. La solution de test est déjà dans l'éditeur.",
-        3,
-        "Facile",
-        25,
-        "nums = [1, 2, 3]",
-        "[3, 2, 1]",
-        "print(\"[3, 2, 1]\")\n");
+            arrays.getId(),
+            "reverse-array",
+            "Inverser un tableau",
+            "Construis une version inversée d'un tableau. La solution de test est déjà dans l'éditeur.",
+            3,
+            "Facile",
+            25,
+            "nums = [1, 2, 3]",
+            "[3, 2, 1]",
+            "print(\"[3, 2, 1]\")\n");
+    ensureExercise(
+            arrays.getId(),
+            "second-largest",
+            "Deuxième plus grand",
+            "Trouve la deuxième plus grande valeur distincte d'un tableau. La réponse est préremplie.",
+            4,
+            "Facile",
+            25,
+            "nums = [4, 2, 15, 8, 15]",
+            "8",
+            "print(8)\n");
+    ensureExercise(
+            arrays.getId(),
+            "sum-array",
+            "Somme d'un tableau",
+            "Calcule la somme de tous les éléments d'un tableau. La solution de test est déjà écrite.",
+            5,
+            "Facile",
+            20,
+            "nums = [1, 2, 3, 4]",
+            "10",
+            "print(10)\n");
+    ensureExercise(
+            arrays.getId(),
+            "rotate-array",
+            "Rotation de tableau",
+            "Décale les éléments d'un tableau de k positions vers la droite. La solution de test est déjà écrite.",
+            6,
+            "Moyen",
+            35,
+            "nums = [1, 2, 3, 4, 5], k = 2",
+            "[4, 5, 1, 2, 3]",
+            "print(\"[4, 5, 1, 2, 3]\")\n");
 
     LessonModel loops = ensureLesson(
-        "loops-conditions",
-        "Boucles et conditions",
-        "Maîtrise les structures de contrôle pour résoudre des problèmes algorithmiques.",
-        2,
-        "Facile",
-        "Algorithmie",
-        arrays.getId());
+            "loops-conditions",
+            "Boucles et conditions",
+            "Maîtrise les structures de contrôle pour résoudre des problèmes algorithmiques.",
+            2,
+            "Facile",
+            "Algorithmie",
+            arrays.getId());
     ensureExercise(
-        loops.getId(),
-        "fizzbuzz",
-        "FizzBuzz",
-        "Utilise conditions et modulo pour produire la bonne séquence. La sortie attendue est déjà produite.",
-        1,
-        "Facile",
-        30,
-        "n = 5",
-        "1\n2\nFizz\n4\nBuzz",
-        "print(\"1\")\nprint(\"2\")\nprint(\"Fizz\")\nprint(\"4\")\nprint(\"Buzz\")\n");
+            loops.getId(),
+            "fizzbuzz",
+            "FizzBuzz",
+            "Utilise conditions et modulo pour produire la bonne séquence. La sortie attendue est déjà produite.",
+            1,
+            "Facile",
+            30,
+            "n = 5",
+            "1\n2\nFizz\n4\nBuzz",
+            "print(\"1\")\nprint(\"2\")\nprint(\"Fizz\")\nprint(\"4\")\nprint(\"Buzz\")\n");
     ensureExercise(
-        loops.getId(),
-        "count-positives",
-        "Compter les positifs",
-        "Compte les valeurs strictement positives dans une liste. La réponse est préremplie.",
-        2,
-        "Facile",
-        25,
-        "nums = [-1, 3, 0, 7, 2]",
-        "3",
-        "print(3)\n");
+            loops.getId(),
+            "count-positives",
+            "Compter les positifs",
+            "Compte les valeurs strictement positives dans une liste. La réponse est préremplie.",
+            2,
+            "Facile",
+            25,
+            "nums = [-1, 3, 0, 7, 2]",
+            "3",
+            "print(3)\n");
+    ensureExercise(
+            loops.getId(),
+            "is-prime",
+            "Nombre premier",
+            "Détermine si un nombre est premier à l'aide d'une boucle. La solution de test est déjà écrite.",
+            3,
+            "Moyen",
+            30,
+            "n = 13",
+            "True",
+            "print(True)\n");
+    ensureExercise(
+            loops.getId(),
+            "gcd",
+            "PGCD",
+            "Calcule le plus grand commun diviseur de deux nombres avec une boucle. La solution de test est déjà écrite.",
+            4,
+            "Moyen",
+            35,
+            "a = 48, b = 18",
+            "6",
+            "print(6)\n");
 
     LessonModel recursion = ensureLesson(
-        "recursion",
-        "Récursivité",
-        "Apprends à décomposer un problème en sous-problèmes plus simples.",
-        3,
-        "Moyen",
-        "Algorithmie",
-        loops.getId());
+            "recursion",
+            "Récursivité",
+            "Apprends à décomposer un problème en sous-problèmes plus simples.",
+            3,
+            "Moyen",
+            "Algorithmie",
+            loops.getId());
     ensureExercise(
-        recursion.getId(),
-        "factorial",
-        "Factorielle",
-        "Implémente une fonction factorielle récursive. La solution est déjà présente pour tester la soumission.",
-        1,
-        "Moyen",
-        40,
-        "n = 5",
-        "120",
-        "def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n\nprint(factorial(5))\n");
+            recursion.getId(),
+            "factorial",
+            "Factorielle",
+            "Implémente une fonction factorielle récursive. La solution est déjà présente pour tester la soumission.",
+            1,
+            "Moyen",
+            40,
+            "n = 5",
+            "120",
+            "def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n\nprint(factorial(5))\n");
+    ensureExercise(
+            recursion.getId(),
+            "fibonacci",
+            "Suite de Fibonacci",
+            "Calcule le n-ième terme de la suite de Fibonacci de façon récursive. La solution de test est déjà écrite.",
+            2,
+            "Moyen",
+            40,
+            "n = 7",
+            "13",
+            "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n - 1) + fibonacci(n - 2)\n\nprint(fibonacci(7))\n");
+    ensureExercise(
+            recursion.getId(),
+            "hanoi-moves",
+            "Tours de Hanoï",
+            "Compte le nombre minimal de mouvements pour résoudre les tours de Hanoï avec n disques, de façon récursive. La solution de test est déjà écrite.",
+            3,
+            "Difficile",
+            50,
+            "n = 4",
+            "15",
+            "def hanoi(n):\n    if n == 0:\n        return 0\n    return 2 * hanoi(n - 1) + 1\n\nprint(hanoi(4))\n");
+
+    LessonModel strings = ensureLesson(
+            "strings-basics",
+            "Manipulation de chaînes",
+            "Découvre les techniques essentielles pour manipuler du texte.",
+            4,
+            "Facile",
+            "Chaînes",
+            recursion.getId());
+    ensureExercise(
+            strings.getId(),
+            "is-palindrome",
+            "Palindrome",
+            "Vérifie si une chaîne se lit de la même façon dans les deux sens. La solution de test est déjà écrite.",
+            1,
+            "Facile",
+            25,
+            "s = \"kayak\"",
+            "True",
+            "print(True)\n");
+    ensureExercise(
+            strings.getId(),
+            "count-vowels",
+            "Compter les voyelles",
+            "Compte le nombre de voyelles dans une chaîne de caractères. La réponse est préremplie.",
+            2,
+            "Facile",
+            25,
+            "s = \"epita\"",
+            "3",
+            "print(3)\n");
+    ensureExercise(
+            strings.getId(),
+            "word-frequency",
+            "Mot le plus fréquent",
+            "Trouve le mot qui apparaît le plus souvent dans une phrase. La solution de test est déjà écrite.",
+            3,
+            "Moyen",
+            35,
+            "s = \"un chat un chien un chat\"",
+            "chat",
+            "print(\"chat\")\n");
+    ensureExercise(
+            strings.getId(),
+            "anagram-check",
+            "Anagrammes",
+            "Vérifie si deux chaînes sont des anagrammes l'une de l'autre. La solution de test est déjà écrite.",
+            4,
+            "Difficile",
+            45,
+            "a = \"ecole\", b = \"coele\"",
+            "True",
+            "print(True)\n");
+
+    LessonModel dictionaries = ensureLesson(
+            "dictionaries-basics",
+            "Dictionnaires",
+            "Manipule des paires clé-valeur pour résoudre des problèmes de comptage et de lookup.",
+            5,
+            "Moyen",
+            "Structures",
+            strings.getId());
+    ensureExercise(
+            dictionaries.getId(),
+            "char-count",
+            "Compter les caractères",
+            "Construis un dictionnaire comptant les occurrences de chaque caractère. La solution de test est déjà écrite.",
+            1,
+            "Facile",
+            30,
+            "s = \"abac\"",
+            "{'a': 2, 'b': 1, 'c': 1}",
+            "print({'a': 2, 'b': 1, 'c': 1})\n");
+    ensureExercise(
+            dictionaries.getId(),
+            "merge-dicts",
+            "Fusionner deux dictionnaires",
+            "Fusionne deux dictionnaires en additionnant les valeurs des clés communes. La solution de test est déjà écrite.",
+            2,
+            "Moyen",
+            35,
+            "a = {'x': 1, 'y': 2}, b = {'y': 3, 'z': 4}",
+            "{'x': 1, 'y': 5, 'z': 4}",
+            "print({'x': 1, 'y': 5, 'z': 4})\n");
+    ensureExercise(
+            dictionaries.getId(),
+            "group-by-length",
+            "Grouper par longueur",
+            "Regroupe une liste de mots dans un dictionnaire selon leur longueur. La solution de test est déjà écrite.",
+            3,
+            "Difficile",
+            45,
+            "words = [\"a\", \"bb\", \"cc\", \"ddd\"]",
+            "{1: ['a'], 2: ['bb', 'cc'], 3: ['ddd']}",
+            "print({1: ['a'], 2: ['bb', 'cc'], 3: ['ddd']})\n");
+
+    LessonModel sorting = ensureLesson(
+            "sorting-searching",
+            "Tri et recherche",
+            "Implémente des algorithmes classiques de tri et de recherche.",
+            6,
+            "Moyen",
+            "Algorithmie",
+            dictionaries.getId());
+    ensureExercise(
+            sorting.getId(),
+            "bubble-sort",
+            "Tri à bulles",
+            "Implémente le tri à bulles pour trier une liste de nombres. La solution de test est déjà écrite.",
+            1,
+            "Moyen",
+            35,
+            "nums = [5, 2, 9, 1, 5]",
+            "[1, 2, 5, 5, 9]",
+            "print([1, 2, 5, 5, 9])\n");
+    ensureExercise(
+            sorting.getId(),
+            "binary-search",
+            "Recherche binaire",
+            "Trouve l'indice d'une valeur dans une liste triée en recherche binaire. La solution de test est déjà écrite.",
+            2,
+            "Moyen",
+            40,
+            "nums = [1, 3, 5, 7, 9, 11], target = 7",
+            "3",
+            "print(3)\n");
+    ensureExercise(
+            sorting.getId(),
+            "kth-largest",
+            "K-ième plus grand élément",
+            "Trouve le k-ième plus grand élément d'une liste sans trier entièrement à la main. La solution de test est déjà écrite.",
+            3,
+            "Difficile",
+            50,
+            "nums = [3, 2, 1, 5, 6, 4], k = 2",
+            "5",
+            "print(5)\n");
 
     ensureAchievement("FIRST_EXERCISE", "Premier pas", "Termine ton tout premier exercice.", "Star", "EXERCISES_COMPLETED", 1, 30);
     ensureAchievement("FIVE_EXERCISES", "Marathonien junior", "Termine 5 exercices au total.", "Trophy", "EXERCISES_COMPLETED", 5, 50);
@@ -191,21 +405,21 @@ public class DevBootstrapService {
   }
 
   private void ensureExercise(
-      UUID lessonId,
-      String slug,
-      String title,
-      String statement,
-      Integer order,
-      String difficulty,
-      Integer xpReward,
-      String exampleInput,
-      String expectedOutput,
-      String solutionCode) {
+          UUID lessonId,
+          String slug,
+          String title,
+          String statement,
+          Integer order,
+          String difficulty,
+          Integer xpReward,
+          String exampleInput,
+          String expectedOutput,
+          String solutionCode) {
     List<ExerciseModel> existing = exerciseRepository.findByLessonId(lessonId);
     ExerciseModel existingExercise = existing.stream()
-        .filter(exercise -> slug.equals(exercise.getSlug()))
-        .findFirst()
-        .orElse(null);
+            .filter(exercise -> slug.equals(exercise.getSlug()))
+            .findFirst()
+            .orElse(null);
     if (existingExercise != null) {
       existingExercise.setTitle(title);
       existingExercise.setStatementMd(statement);
@@ -264,9 +478,9 @@ public class DevBootstrapService {
 
   private String jsonEscape(String value) {
     return value
-        .replace("\\", "\\\\")
-        .replace("\"", "\\\"")
-        .replace("\n", "\\n");
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n");
   }
 
   private void ensureAchievement(String code, String title, String description, String icon, String criteriaType, Integer criteriaValue, Integer xpReward) {
