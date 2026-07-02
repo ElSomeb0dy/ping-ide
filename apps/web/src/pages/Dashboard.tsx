@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { Flame, Check, Gift, Trophy } from "lucide-react";
+import { Flame, Check, Gift } from "lucide-react";
 import { Card, ProgressBar, Button, XpBadge } from "../components/ui";
+import AchievementIcon from "../components/AchievementIcon";
 import XpRing from "../components/XpRing";
 import { useAchievements } from "../hooks/useAchievements";
 import { useLessons } from "../hooks/useLessons";
@@ -153,7 +154,7 @@ export default function Dashboard() {
                 className="flex items-center gap-3 rounded-xl border border-(--color-border) p-3"
               >
                 <div className="grid size-10 shrink-0 place-items-center rounded-full bg-(--color-surface-elevated)">
-                  <Trophy className="size-4 text-(--color-green)" />
+                  <AchievementIcon name={a.icon} />
                 </div>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold">{a.title}</p>

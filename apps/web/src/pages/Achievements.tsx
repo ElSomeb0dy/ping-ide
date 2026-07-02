@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 import { Card, Pill, XpBadge } from "../components/ui";
 import { useAchievements } from "../hooks/useAchievements";
+import AchievementIcon from "../components/AchievementIcon";
 
 const filters = ["Tous les succès", "Débloqués", "Verrouillés"] as const;
 type Filter = (typeof filters)[number];
@@ -49,7 +50,7 @@ export default function Achievements() {
                                     {locked ? (
                                         <Lock className="size-4 text-(--color-text-mute)" />
                                     ) : (
-                                        <img src={a.icon} alt={a.title} className="size-full object-cover" />
+                                        <AchievementIcon name={a.icon} />
                                     )}
                                 </div>
                                 <div className="min-w-0 flex-1">
