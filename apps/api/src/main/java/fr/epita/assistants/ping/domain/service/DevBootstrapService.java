@@ -392,10 +392,16 @@ public class DevBootstrapService {
             "5",
             "print(5)\n");
 
-    ensureAchievement("FIRST_EXERCISE", "Premier pas", "Termine ton tout premier exercice.", "Star", "EXERCISES_COMPLETED", 1, 30);
-    ensureAchievement("FIVE_EXERCISES", "Marathonien junior", "Termine 5 exercices au total.", "Trophy", "EXERCISES_COMPLETED", 5, 50);
-    ensureAchievement("FIRST_LESSON", "Leçon maîtrisée", "Termine une leçon complète.", "GraduationCap", "LESSONS_COMPLETED", 1, 50);
-    ensureAchievement("LEVEL_5", "Niveau 5", "Atteins le niveau 5.", "Zap", "LEVEL", 5, 75);
+    ensureAchievement("FIRST_EXERCISE", "Premier pas", "Termine ton tout premier exercice.", "/achievements/first-exercise.svg", "EXERCISES_COMPLETED", 1, 30);
+    ensureAchievement("FIVE_EXERCISES", "Marathonien junior", "Termine 5 exercices au total.", "/achievements/five-exercises.svg", "EXERCISES_COMPLETED", 5, 50);
+    ensureAchievement("TEN_EXERCISES", "Habitué", "Termine 10 exercices au total.", "/achievements/ten-exercises.svg", "EXERCISES_COMPLETED", 10, 60);
+    ensureAchievement("TWENTYFIVE_EXERCISES", "Expert des exercices", "Termine 25 exercices au total.", "/achievements/twentyfive-exercises.svg", "EXERCISES_COMPLETED", 25, 100);
+    ensureAchievement("FIRST_LESSON", "Leçon maîtrisée", "Termine une leçon complète.", "/achievements/first-lesson.svg", "LESSONS_COMPLETED", 1, 50);
+    ensureAchievement("THREE_LESSONS", "Étudiant assidu", "Termine 3 leçons complètes.", "/achievements/three-lessons.svg", "LESSONS_COMPLETED", 3, 75);
+    ensureAchievement("ALL_LESSONS", "Maître du parcours", "Termine toutes les leçons disponibles.", "/achievements/all-lessons.svg", "LESSONS_COMPLETED", 7, 150);
+    ensureAchievement("LEVEL_5", "Niveau 5", "Atteins le niveau 5.", "/achievements/level-5.svg", "LEVEL", 5, 75);
+    ensureAchievement("LEVEL_10", "Niveau 10", "Atteins le niveau 10.", "/achievements/level-10.svg", "LEVEL", 10, 120);
+    ensureAchievement("LEVEL_20", "Niveau 20", "Atteins le niveau 20.", "/achievements/level-20.svg", "LEVEL", 20, 200);
 
     ensureQuest("DAILY_LOGIN", "Connexion du jour", "Connecte-toi aujourd'hui.", 10, "LOGIN", 1);
     ensureQuest("SOLVE_ONE", "Résous 1 exercice", "Termine un exercice aujourd'hui.", 30, "EXERCISES_COMPLETED", 1);
@@ -500,7 +506,14 @@ public class DevBootstrapService {
   }
 
   private void ensureAchievement(String code, String title, String description, String icon, String criteriaType, Integer criteriaValue, Integer xpReward) {
-    if (achievementRepository.findByCode(code) != null) {
+    AchievementModel existing = achievementRepository.findByCode(code);
+    if (existing != null) {
+      existing.setTitle(title);
+      existing.setDescription(description);
+      existing.setIcon(icon);
+      existing.setCriteriaType(criteriaType);
+      existing.setCriteriaValue(criteriaValue);
+      existing.setXpReward(xpReward);
       return;
     }
 
