@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @ApplicationScoped
 public class FolderService {
 
-  @ConfigProperty(name = "FILESYSTEM_DEFAULT_PATH")
+  @ConfigProperty(name = "FILESYSTEM_DEFAULT_PATH", defaultValue = "/tmp/ping")
   String defaultPath;
 
   public List<FolderModel> fetchFolders(String path) {

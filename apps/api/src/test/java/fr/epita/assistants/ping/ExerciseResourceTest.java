@@ -10,80 +10,71 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
 
 @QuarkusTest
 @TestProfile(UserRegistrationTestProfile.class)
-public class LessonAndAchievementResourceTest {
+public class ExerciseResourceTest {
 
   @Test
-  public void fetchLessonsWithoutAuthIsUnauthorized() {
+  public void fetchExerciseWithoutAuthIsUnauthorized() {
     given()
         .when()
-        .get("/api/lessons")
+        .get("/api/exercises/" + UUID.randomUUID())
         .then()
         .statusCode(401);
   }
 
   @Test
-  public void fetchLessonsReturnsSeededContent() {
-    String token = registerUser("lessons");
+  public void fetchUnknownExerciseReturnsNotFound() {
+    String token = registerUser("exercisenotfound");
 
     given()
         .header("Authorization", "Bearer " + token)
         .when()
-        .get("/api/lessons")
-        .then()
-        .statusCode(200)
-        .body("size()", greaterThan(0));
-  }
-
-  @Test
-  public void fetchUnknownLessonReturnsNotFound() {
-    String token = registerUser("lessonnotfound");
-
-    given()
-        .header("Authorization", "Bearer " + token)
-        .when()
-        .get("/api/lessons/" + UUID.randomUUID())
+        .get("/api/exercises/" + UUID.randomUUID())
         .then()
         .statusCode(404);
   }
 
   @Test
-  public void fetchLessonByIdReturnsDetail() {
-    String token = registerUser("lessondetail");
-
-    String lessonId = given()
-        .header("Authorization", "Bearer " + token)
-        .when()
-        .get("/api/lessons")
-        .then()
-        .statusCode(200)
-        .body("size()", greaterThan(0))
-        .extract()
-        .path("[0].id");
-
+  public void submitWithoutAuthIsUnauthorized() {
     given()
-        .header("Authorization", "Bearer " + token)
+        .contentType(ContentType.JSON)
+        .body(Map.of("language", "Python", "code", "print('hi')"))
         .when()
-        .get("/api/lessons/" + lessonId)
+        .post("/api/exercises/" + UUID.randomUUID() + "/submit")
         .then()
-        .statusCode(200)
-        .body("id", equalTo(lessonId));
+        .statusCode(401);
   }
 
   @Test
-  public void fetchAchievementsReturnsSeededContent() {
-    String token = registerUser("achievements");
+  public void submitWithMissingFieldsIsBadRequest() {
+    String token = registerUser("submitmissing");
 
     given()
         .header("Authorization", "Bearer " + token)
+        .contentType(ContentType.JSON)
+        .body(Map.of())
         .when()
-        .get("/api/achievements")
+        .post("/api/exercises/" + UUID.randomUUID() + "/submit")
         .then()
-        .statusCode(200)
-        .body("size()", greaterThan(0));
+        .statusCode(400)
+        .body("message", equalTo("language and code are required"));
+  }
+
+  @Test
+  public void submitUnknownExerciseReturnsNotFound() {
+    String token = registerUser("submitnotfound");
+
+    given()
+        .header("Authorization", "Bearer " + token)
+        .contentType(ContentType.JSON)
+        .body(Map.of("language", "Python", "code", "print('hi')"))
+        .when()
+        .post("/api/exercises/" + UUID.randomUUID() + "/submit")
+        .then()
+        .statusCode(404)
+        .body("message", equalTo("Exercise not found"));
   }
 
   private String registerUser(String prefix) {
