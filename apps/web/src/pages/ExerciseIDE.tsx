@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
-import { ArrowLeft, Check, CheckCircle, Play, Sparkles, Terminal, Trophy, X } from "lucide-react";
+import { ArrowLeft, Check, CheckCircle, Play, Terminal, Trophy, X } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Card, XpBadge } from "../components/ui";
 import CodeEditor from "../components/CodeEditor";
@@ -189,7 +189,6 @@ function ResultPanelView({ output }: { output: ResultPanel }) {
 
   const result = output.result;
   const passed = result.status === "PASSED";
-  const completedQuestUpdates = result.questUpdates.filter((quest) => quest.status === "COMPLETED" || quest.status === "CLAIMED");
 
   return (
     <div
@@ -225,16 +224,8 @@ function ResultPanelView({ output }: { output: ResultPanel }) {
             key={`${test.input}-${index}`}
             className="rounded-lg border border-(--color-border) bg-(--color-surface) p-3"
           >
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
               <p className="text-sm font-semibold">Test {index + 1}</p>
-              <span
-                className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs ${
-                  test.passed ? "bg-(--color-green-soft) text-(--color-green)" : "bg-(--color-orange-soft) text-(--color-orange)"
-                }`}
-              >
-                {test.passed ? <Check className="size-3" /> : <X className="size-3" />}
-                {test.passed ? "Réussi" : "Échoué"}
-              </span>
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               <OutputBlock label="Attendu" value={test.expected || "-"} compact />
@@ -244,16 +235,11 @@ function ResultPanelView({ output }: { output: ResultPanel }) {
         ))}
       </div>
 
-      {(result.newAchievements.length > 0 || completedQuestUpdates.length > 0) && (
+      {result.newAchievements.length > 0 && (
         <div className="mt-4 flex flex-col gap-2">
           {result.newAchievements.map((achievement) => (
             <p key={achievement.id} className="inline-flex items-center gap-2 text-sm text-(--color-green)">
               <Trophy className="size-4" /> Succès débloqué: {achievement.title}
-            </p>
-          ))}
-          {completedQuestUpdates.map((quest) => (
-            <p key={quest.id} className="inline-flex items-center gap-2 text-sm text-(--color-green)">
-              <Sparkles className="size-4" /> Quête prête: {quest.title}
             </p>
           ))}
         </div>
