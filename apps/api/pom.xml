@@ -8,6 +8,7 @@
 
     <properties>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
+        <docker.api.version>1.44</docker.api.version>
 
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -264,6 +265,7 @@
                     <systemPropertyVariables>
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                         <maven.home>${maven.home}</maven.home>
+                        <api.version>${docker.api.version}</api.version>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
