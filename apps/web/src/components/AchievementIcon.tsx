@@ -15,7 +15,7 @@ export default function AchievementIcon({
   className?: string;
 }) {
   if (isImageIcon(name)) {
-    return <img src={name} alt="" className="size-full object-cover" />;
+    return <img src={name} alt="" aria-hidden="true" className="size-full object-cover" />;
   }
 
   const Icon = icons[name] ?? Trophy;

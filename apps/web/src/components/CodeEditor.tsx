@@ -38,6 +38,7 @@ export default function CodeEditor({
         }}
         onScroll={syncScroll}
         spellCheck={false}
+        aria-label="Éditeur de code"
         className="h-full w-full resize-none bg-transparent py-4 pr-4 font-mono text-sm leading-6 text-(--color-text) outline-none"
       />
     </div>

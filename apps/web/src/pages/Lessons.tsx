@@ -38,6 +38,7 @@ export default function Lessons() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher une leçon..."
+            aria-label="Rechercher une leçon"
             className="w-full bg-transparent text-sm outline-none placeholder:text-(--color-text-mute)"
           />
         </div>
@@ -71,14 +72,14 @@ export default function Lessons() {
           const locked = lesson.status === "LOCKED";
 
           return (
-            <Card key={lesson.id} highlight={!locked} className={locked ? "opacity-60" : ""}>
+            <Card key={lesson.id} highlight={!locked}>
               <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
+                <div className="flex min-w-0 items-center gap-4">
                   <div className="grid size-12 shrink-0 place-items-center rounded-full border border-(--color-border-hover) bg-(--color-surface-elevated)">
                     {locked && <Lock className="size-4 text-(--color-text-mute)" />}
                   </div>
-                  <div>
-                    <h2 className="font-display text-2xl font-bold">{lesson.title}</h2>
+                  <div className="min-w-0">
+                    <h2 className="truncate font-display text-2xl font-bold">{lesson.title}</h2>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <Pill>{lesson.difficulty}</Pill>
                       <Pill>{lesson.icon}</Pill>

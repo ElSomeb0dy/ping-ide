@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Flame, Check, Gift } from "lucide-react";
 import { Card, ProgressBar, Button, XpBadge } from "../components/ui";
@@ -16,9 +17,14 @@ export default function Dashboard() {
   const claimQuest = useClaimQuest();
   const achievements = useAchievements();
   const user = useUser();
+  const [claimError, setClaimError] = useState<string | null>(null);
 
   if (stats.isLoading || lessons.isLoading || quests.isLoading || achievements.isLoading || user.isLoading) {
     return <Card>Chargement...</Card>;
+  }
+
+  if (stats.isError || lessons.isError || quests.isError || achievements.isError || user.isError) {
+    return <Card>Impossible de charger le dashboard. Réessaie plus tard.</Card>;
   }
 
   const displayName = user.data?.displayName ?? "Apprenant";
@@ -88,6 +94,9 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr]">
         <Card>
           <h2 className="font-display text-2xl font-bold">Quêtes du jour</h2>
+          {claimError && (
+            <p className="mt-2 text-sm text-(--color-orange)">{claimError}</p>
+          )}
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {(quests.data ?? []).length === 0 && (
               <div className="rounded-xl border border-(--color-border) p-4 text-sm text-(--color-text-soft)">
@@ -105,7 +114,7 @@ export default function Dashboard() {
                   key={q.id}
                   className={`rounded-xl border p-4 ${
                     isClaimed
-                      ? "border-(--color-border) opacity-50"
+                      ? "border-(--color-border)"
                       : "border-(--color-border-hover)"
                   }`}
                 >
@@ -117,7 +126,15 @@ export default function Dashboard() {
                       </span>
                     ) : isCompleted ? (
                       <button
-                        onClick={() => claimQuest.mutate(q.id)}
+                        onClick={() => {
+                          setClaimError(null);
+                          claimQuest.mutate(q.id, {
+                            onError: (err) =>
+                              setClaimError(
+                                err instanceof Error ? err.message : "Impossible de réclamer la récompense",
+                              ),
+                          });
+                        }}
                         disabled={claimQuest.isPending}
                         className="inline-flex items-center gap-1 rounded-full border border-(--color-green) px-2.5 py-1 text-xs font-medium text-(--color-green) transition-colors hover:bg-(--color-green-soft) disabled:opacity-50"
                       >

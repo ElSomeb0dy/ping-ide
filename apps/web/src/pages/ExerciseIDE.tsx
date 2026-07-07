@@ -116,11 +116,12 @@ export default function ExerciseIDE() {
         {output && <ResultPanelView output={output} />}
       </div>
 
-      <div className="flex flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-3">
+      <div className="flex min-h-[26rem] flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-3 lg:min-h-0">
         <div className="flex items-center justify-between border-b border-(--color-border) px-2 pb-3">
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
+            aria-label="Langage de programmation"
             className="rounded-lg bg-transparent text-sm text-(--color-text-soft) outline-none"
           >
             {languages.map((l) => (

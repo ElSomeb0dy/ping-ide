@@ -44,7 +44,7 @@ export default function Achievements() {
                 {visible.map((a) => {
                     const locked = !a.unlocked;
                     return (
-                        <Card key={a.id} highlight={!locked} className={locked ? "opacity-60" : ""}>
+                        <Card key={a.id} highlight={!locked}>
                             <div className="flex items-start gap-3">
                                 <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-full bg-(--color-surface-elevated)">
                                     {locked ? (

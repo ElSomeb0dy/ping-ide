@@ -18,6 +18,7 @@ export default function Profile() {
   const [dragging, setDragging] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   if (statsQuery.isLoading) return <Card>Chargement du profil...</Card>;
 
@@ -27,12 +28,18 @@ export default function Profile() {
 
   const startEditingAvatar = () => {
     setAvatarInput(avatar ?? "");
+    setSaveError(null);
     setEditingAvatar(true);
   };
 
   const saveAvatar = async () => {
-    await updateUser.mutateAsync({ avatar: avatarInput });
-    setEditingAvatar(false);
+    setSaveError(null);
+    try {
+      await updateUser.mutateAsync({ avatar: avatarInput });
+      setEditingAvatar(false);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Impossible d'enregistrer l'avatar");
+    }
   };
 
   const readFile = (file: File) => {
@@ -44,14 +51,22 @@ export default function Profile() {
 
   const startEditingName = () => {
     setNameInput(displayName);
+    setSaveError(null);
     setEditingName(true);
   };
 
   const saveName = async () => {
-    if (nameInput.trim()) {
-      await updateUser.mutateAsync({ displayName: nameInput.trim() });
+    if (!nameInput.trim()) {
+      setEditingName(false);
+      return;
     }
-    setEditingName(false);
+    setSaveError(null);
+    try {
+      await updateUser.mutateAsync({ displayName: nameInput.trim() });
+      setEditingName(false);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Impossible d'enregistrer le nom");
+    }
   };
   const stats = [
     { label: "Leçons terminées", value: userStats?.lessonsCompleted ?? 0, icon: GraduationCap },
@@ -78,6 +93,7 @@ export default function Profile() {
                   onClick={startEditingAvatar}
                   className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full border border-(--color-border-hover) bg-(--color-surface-elevated) text-(--color-text-soft) hover:text-(--color-green)"
                   title="Modifier l'avatar"
+                  aria-label="Modifier l'avatar"
               >
                 <Pencil className="size-3.5" />
               </button>
@@ -88,6 +104,7 @@ export default function Profile() {
                     <input
                         autoFocus
                         type="text"
+                        aria-label="Nom d'affichage"
                         value={nameInput}
                         onChange={(e) => setNameInput(e.target.value)}
                         onKeyDown={(e) => {
@@ -97,7 +114,7 @@ export default function Profile() {
                         className="rounded-lg border border-(--color-border-hover) bg-(--color-surface-elevated) px-3 py-1.5 font-display text-xl font-bold outline-none"
                     />
                     <Button variant="solid" onClick={saveName} disabled={updateUser.isPending}>
-                      OK
+                      {updateUser.isPending ? "Enregistrement..." : "OK"}
                     </Button>
                     <Button variant="ghost" onClick={() => setEditingName(false)}>
                       Annuler
@@ -110,6 +127,9 @@ export default function Profile() {
                   </button>
               )}
               <p className="text-sm text-(--color-text-soft)">Membre depuis Janvier 2026</p>
+              {editingName && saveError && (
+                <p className="mt-1 text-xs text-(--color-orange)">{saveError}</p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -162,14 +182,20 @@ export default function Profile() {
                     />
                   </label>
                 </div>
-                <label className="text-sm text-(--color-text-soft)">Ou une URL d'image</label>
+                <label htmlFor="avatar-url" className="text-sm text-(--color-text-soft)">
+                  Ou une URL d'image
+                </label>
                 <input
+                    id="avatar-url"
                     type="text"
                     value={avatarInput.startsWith("data:") ? "" : avatarInput}
                     onChange={(e) => setAvatarInput(e.target.value)}
                     placeholder="https://..."
                     className="w-full rounded-lg border border-(--color-border-hover) bg-(--color-surface-elevated) px-3.5 py-2.5 text-sm outline-none"
                 />
+                {saveError && (
+                  <p className="text-sm text-(--color-orange)">{saveError}</p>
+                )}
                 <div className="flex items-center gap-3">
                   <Button variant="solid" onClick={saveAvatar} disabled={updateUser.isPending}>
                     {updateUser.isPending ? "Enregistrement..." : "Enregistrer"}

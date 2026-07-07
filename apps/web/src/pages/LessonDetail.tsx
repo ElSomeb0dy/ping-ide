@@ -48,7 +48,7 @@ export default function LessonDetail() {
             <div
               key={ex.id}
               className={`flex flex-col rounded-2xl border p-4 ${
-                locked ? "border-(--color-border) opacity-50" : "border-(--color-border-hover)"
+                locked ? "border-(--color-border)" : "border-(--color-border-hover)"
               }`}
             >
               <div className="flex items-center gap-2">

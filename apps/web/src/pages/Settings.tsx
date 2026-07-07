@@ -9,6 +9,7 @@ export default function Settings() {
   const settings = useSettings();
   const updateSettings = useUpdateSettings();
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   if (settings.isLoading) return <Card>Chargement des réglages...</Card>;
   if (settings.isError) return <Card>Impossible de charger les réglages.</Card>;
@@ -21,9 +22,14 @@ export default function Settings() {
   };
 
   const save = async () => {
-    await updateSettings.mutateAsync(data);
-    setSaved(true);
-    window.setTimeout(() => setSaved(false), 1500);
+    setSaveError(null);
+    try {
+      await updateSettings.mutateAsync(data);
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 1500);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Impossible d'enregistrer les réglages");
+    }
   };
 
   return (
@@ -34,8 +40,11 @@ export default function Settings() {
         <h2 className="font-display text-lg font-bold text-(--color-green)">Environnement IDE</h2>
         <div className="mt-5 flex flex-col gap-5">
           <div>
-            <label className="text-sm text-(--color-text-soft)">Thème de l'éditeur</label>
+            <label htmlFor="ide-theme" className="text-sm text-(--color-text-soft)">
+              Thème de l'éditeur
+            </label>
             <select
+              id="ide-theme"
               value={data.theme}
               onChange={(e) => updateSettings.mutate({ theme: e.target.value })}
               className="mt-2 w-full rounded-lg border border-(--color-border-hover) bg-(--color-surface-elevated) px-3.5 py-2.5 text-sm outline-none"
@@ -46,8 +55,11 @@ export default function Settings() {
             </select>
           </div>
           <div>
-            <label className="text-sm text-(--color-text-soft)">Langage par défaut</label>
+            <label htmlFor="default-language" className="text-sm text-(--color-text-soft)">
+              Langage par défaut
+            </label>
             <select
+              id="default-language"
               value={data.defaultLanguage}
               onChange={(e) => updateSettings.mutate({ defaultLanguage: e.target.value })}
               className="mt-2 w-full rounded-lg border border-(--color-border-hover) bg-(--color-surface-elevated) px-3.5 py-2.5 text-sm outline-none"
@@ -67,13 +79,25 @@ export default function Settings() {
             label="Rappels de série"
             description="Reçois un rappel quotidien pour garder ta série."
             value={data.notificationsEnabled}
-            onChange={(value) => updateSettings.mutate({ notificationsEnabled: value })}
+            onChange={(value) => {
+              setSaveError(null);
+              updateSettings.mutate(
+                { notificationsEnabled: value },
+                { onError: (err) => setSaveError(err instanceof Error ? err.message : "Impossible d'enregistrer les réglages") },
+              );
+            }}
           />
           <ToggleRow
             label="Sons de l'interface"
             description="Active les sons lors de la complétion d'un exercice."
             value={data.soundEnabled}
-            onChange={(value) => updateSettings.mutate({ soundEnabled: value })}
+            onChange={(value) => {
+              setSaveError(null);
+              updateSettings.mutate(
+                { soundEnabled: value },
+                { onError: (err) => setSaveError(err instanceof Error ? err.message : "Impossible d'enregistrer les réglages") },
+              );
+            }}
           />
         </div>
       </Card>
@@ -83,6 +107,7 @@ export default function Settings() {
           {updateSettings.isPending ? "Enregistrement..." : "Enregistrer les modifications"}
         </Button>
         {saved && <p className="text-sm text-(--color-green)">Réglages enregistrés</p>}
+        {saveError && <p className="text-sm text-(--color-orange)">{saveError}</p>}
       </div>
     </div>
   );
@@ -108,6 +133,7 @@ function ToggleRow({
       <button
         type="button"
         aria-pressed={value}
+        aria-label={label}
         onClick={() => onChange(!value)}
         className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
           value ? "bg-(--color-green)" : "bg-(--color-surface-elevated)"

@@ -34,7 +34,7 @@ export default function Login() {
   };
 
   return (
-    <main className="grid min-h-screen place-items-center bg-(--color-bg) px-6">
+    <main className="grid h-screen place-items-center overflow-y-auto bg-(--color-bg) px-6 py-10">
       <Card className="w-full max-w-md">
         <div className="flex items-center gap-2">
           <Zap className="size-7 text-(--color-green)" strokeWidth={2.5} />
